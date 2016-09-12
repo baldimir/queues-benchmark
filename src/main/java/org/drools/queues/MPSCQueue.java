@@ -17,11 +17,12 @@
 package org.drools.queues;
 
 import org.jctools.queues.MessagePassingQueue;
-import org.jctools.queues.MpscLinkedQueue8;
+import org.jctools.queues.MpscArrayQueue;
 
 public class MPSCQueue implements DroolsQueue {
 
-    MessagePassingQueue<QueueEntry> delegate = new MpscLinkedQueue8<QueueEntry>();
+    // private final MessagePassingQueue<QueueEntry> delegate = new MpscLinkedQueue8<QueueEntry>();
+    private final MessagePassingQueue<QueueEntry> delegate = new MpscArrayQueue<QueueEntry>(200_000_000);
 
     public void addEntry( QueueEntry entry ) {
         delegate.offer( entry );
