@@ -16,20 +16,15 @@
 
 package org.drools.queues;
 
-import org.jctools.queues.MessagePassingQueue;
-import org.jctools.queues.MpscArrayQueue;
+public class MPSCQueueWithFlush implements DroolsQueue {
 
-public class MPSCQueue implements DroolsQueue {
-
-    private final MessagePassingQueue<QueueEntry> delegate = new MpscArrayQueue<QueueEntry>(200_000_000);
+    private final MpscArrayQueueWithFlush<QueueEntry> delegate = new MpscArrayQueueWithFlush<QueueEntry>( 200_000_000);
 
     public void addEntry( QueueEntry entry ) {
         delegate.offer( entry );
     }
 
     public void flush() {
-        for (QueueEntry entry = delegate.relaxedPoll(); entry != null; entry = entry.getNext()) {
-            entry.execute();
-        }
+        delegate.relaxedFlush( QueueEntry::execute );
     }
 }

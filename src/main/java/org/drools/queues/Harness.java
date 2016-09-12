@@ -26,8 +26,9 @@ public class Harness {
 
     private static final int PRODUCERS = 3;
 
-    private static final DroolsQueue queue = new SynchronizedPropagationQueue();
-    // private static final DroolsQueue queue = new MPSCQueue();
+    //private static final DroolsQueue queue = new SynchronizedPropagationQueue();
+    //private static final DroolsQueue queue = new MPSCQueue();
+    private static final DroolsQueue queue = new MPSCQueueWithFlush();
 
     private static final AtomicInteger insertedCounter = new AtomicInteger();
     private static final AtomicInteger flushedCounter = new AtomicInteger();
