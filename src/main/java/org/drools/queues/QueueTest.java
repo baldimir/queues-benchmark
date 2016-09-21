@@ -25,7 +25,7 @@ import org.openjdk.jmh.annotations.Warmup;
 @Threads(4)
 public class QueueTest {
 
-    @Param({"SYNC_PROPAGATION_QUEUE", "MPSC_QUEUE"})
+    @Param({"SYNC_PROPAGATION_QUEUE", "MPSC_QUEUE", "MPSC_QUEUE_WITH_FLUSH"})
     private QueueType queueType;
 
     private DroolsQueue queue;
@@ -66,6 +66,8 @@ public class QueueTest {
                 return new SynchronizedPropagationQueue();
             case MPSC_QUEUE:
                 return new MPSCQueue();
+            case MPSC_QUEUE_WITH_FLUSH:
+                return new MPSCQueueWithFlush();
             default:
                 throw new IllegalArgumentException("Unsupported queue type: " + queueType + "!");
         }
