@@ -55,7 +55,7 @@ public class QueueTest {
     @Group("queueBenchmark")
     @GroupThreads(1)
     public void flushQueue(final FlushedCounter flushedCounter) {
-        Blackhole.consumeCPU(1024);
+        Blackhole.consumeCPU(65536);
         queue.flush();
     }
 
