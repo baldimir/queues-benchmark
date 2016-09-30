@@ -28,7 +28,7 @@ public class MPSCQueue implements DroolsQueue {
     }
 
     public void flush() {
-        for (QueueEntry entry = delegate.relaxedPoll(); entry != null; entry = entry.getNext()) {
+        for (QueueEntry entry = delegate.relaxedPoll(); entry != null; entry = delegate.relaxedPoll()) {
             entry.execute();
         }
     }
