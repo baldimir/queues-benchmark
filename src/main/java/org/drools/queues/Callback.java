@@ -1,17 +1,17 @@
 package org.drools.queues;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 
 public class Callback implements Runnable {
 
-    private final AtomicInteger flushedCounter;
+    private final LongAdder flushedCounter;
 
-    public Callback(AtomicInteger flushedCounter) {
+    public Callback(LongAdder flushedCounter) {
         this.flushedCounter = flushedCounter;
     }
 
     @Override
     public void run() {
-        flushedCounter.incrementAndGet();
+        flushedCounter.add(1);
     }
 }

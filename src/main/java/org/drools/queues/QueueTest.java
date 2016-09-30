@@ -1,5 +1,7 @@
 package org.drools.queues;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
 import org.openjdk.jmh.annotations.AuxCounters;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -15,9 +17,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.openjdk.jmh.infra.Blackhole;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
@@ -33,11 +33,11 @@ public class QueueTest {
     private DroolsQueue queue;
 
     private static Callback callback;
-    private static AtomicInteger flushedCounter;
+    private static LongAdder flushedCounter;
 
     @Setup(Level.Iteration)
     public void setup() {
-        flushedCounter = new AtomicInteger(0);
+        flushedCounter = new LongAdder();
         callback = new Callback(flushedCounter);
 
         queue = createQueueInstance(queueType);
@@ -46,8 +46,8 @@ public class QueueTest {
     @AuxCounters
     @State(Scope.Thread)
     public static class FlushedCounter {
-        public int flushedEvents() {
-            return flushedCounter.get();
+        public long flushedEvents() {
+            return flushedCounter.longValue();
         }
     }
 
@@ -55,11 +55,7 @@ public class QueueTest {
     @Group("queueBenchmark")
     @GroupThreads(1)
     public void flushQueue(final FlushedCounter flushedCounter) {
-        try {
-            Thread.sleep(1L);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        Blackhole.consumeCPU(1024);
         queue.flush();
     }
 
